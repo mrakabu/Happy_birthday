@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Geetha! 💖</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&family=Sacramento&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #ff8fa3;
+            --secondary: #ffb3c1;
+            --accent: #ff4d6d;
+            --bg-color: #fff0f3;
+            --card-bg: #ffffff;
+            --text-color: #590d22;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden;
+            text-align: center;
+            padding-bottom: 50px;
+        }
+
+        /* Floating background hearts */
+        .heart-bg {
+            position: fixed;
+            top: -10%;
+            font-size: 20px;
+            color: rgba(255, 77, 109, 0.4);
+            animation: float 6s infinite linear;
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Section */
+        header {
+            margin-top: 30px;
+            animation: bounceIn 1.2s ease-in-out;
+        }
+
+        h1 {
+            font-family: 'Sacramento', cursive;
+            font-size: 4rem;
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.4rem;
+            color: #800f2f;
+        }
+
+        /* Bubu & Dudu Banner Section */
+        .cartoon-banner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .bubu-dudu-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 143, 163, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .bubu-dudu-card:hover {
+            transform: rotate(2deg) scale(1.03);
+        }
+
+        .bubu-dudu-img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        /* Photo Frame Section */
+        .section-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 2rem;
+            color: var(--accent);
+            margin: 40px 0 20px;
+        }
+
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .polaroid {
+            background: white;
+            padding: 15px 15px 25px 15px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 240px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:nth-child(odd) { transform: rotate(-3deg); }
+
+        .polaroid:hover {
+            transform: scale(1.05) rotate(0deg);
+            z-index: 2;
+            box-shadow: 0 15px 30px rgba(255, 77, 109, 0.3);
+        }
+
+        .photo-slot {
+            width: 100%;
+            height: 200px;
+            background-color: #ffe5ec;
+            border: 2px dashed var(--primary);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-caption {
+            font-family: 'Sacramento', cursive;
+            font-size: 1.8rem;
+            margin-top: 15px;
+            color: var(--text-color);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Love Messages & Quotes Grid */
+        .message-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .love-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(255, 179, 193, 0.4);
+            border: 2px solid #ffccd5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .love-card::before {
+            content: '🌸';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .love-card p {
+            font-size: 1.05rem;
+            line-height: 1.6;
+            color: #590d22;
+        }
+
+        /* Interactive Surprise Box */
+        .interactive-section {
+            margin: 50px 0 20px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(255, 143, 163, 0.25);
+        }
+
+        .btn-celebrate {
+            background: linear-gradient(45deg, #ff4d6d, #ff8fa3);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        .btn-celebrate:hover {
+            transform: scale(1.08);
+            box-shadow: 0 8px 25px rgba(255, 77, 109, 0.6);
+        }
+
+        .surprise-msg {
+            display: none;
+            margin-top: 25px;
+            font-size: 1.2rem;
+            color: var(--accent);
+            animation: fadeIn 1s forwards;
+        }
+
+        /* Animations */
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            h1 { font-size: 2.8rem; }
+            .subtitle { font-size: 1.1rem; }
+            .cartoon-banner { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Floating hearts container -->
+    <div id="hearts-container"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Happy Birthday, Geetha! 🎉💖</h1>
+            <p class="subtitle">To the sweetest person in my universe ✨</p>
+        </header>
+
+        <!-- Cute Cartoon / Bubu & Dudu Display -->
+        <div class="cartoon-banner">
+            <div class="bubu-dudu-card">
+                <!-- Using cute animated SVG placeholder graphics representing Bubu & Dudu -->
+                <svg class="bubu-dudu-img" viewBox="0 0 100 100">
+                    <!-- Cute Panda / Bear illustration -->
+                    <circle cx="50" cy="55" r="35" fill="#fefae0" stroke="#d4a373" stroke-width="3"/>
+                    <circle cx="25" cy="28" r="10" fill="#fefae0" stroke="#d4a373" stroke-width="3"/>
+                    <circle cx="75" cy="28" r="10" fill="#fefae0" stroke="#d4a373" stroke-width="3"/>
+                    <circle cx="40" cy="50" r="4" fill="#333"/>
+                    <circle cx="60" cy="50" r="4" fill="#333"/>
+                    <ellipse cx="50" cy="58" rx="6" ry="4" fill="#d4a373"/>
+                    <path d="M 45 64 Q 50 68 55 64" stroke="#333" stroke-width="2" fill="none"/>
+                    <circle cx="33" cy="58" r="5" fill="#ffb3c1" opacity="0.6"/>
+                    <circle cx="67" cy="58" r="5" fill="#ffb3c1" opacity="0.6"/>
+                </svg>
+                <div style="text-align: left;">
+                    <h3 style="font-family: 'Fredoka'; color: #ff4d6d;">Bubu & Dudu Hugs</h3>
+                    <p style="font-size: 0.9rem;">Sending you infinite bear hugs on your special day!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Frame Section -->
+        <h2 class="section-title">📸 Our Favorite Memories</h2>
+        <p style="margin-bottom: 20px; font-size: 0.95rem; color: #777;">(Click on any frame to upload & add your photo!)</p>
+
+        <div class="photo-gallery">
+            <!-- Frame 1 -->
+            <div class="polaroid" onclick="document.getElementById('img1').click()">
+                <div class="photo-slot" id="slot1">
+                    <span style="font-size: 2rem;">📷</span>
+                    <span style="font-size: 0.8rem; color: #aa4465;">Click to add photo</span>
+                </div>
+                <input type="file" id="img1" class="file-input" accept="image/*" onchange="loadPhoto(event, 'slot1')">
+                <div class="photo-caption">Your Cute Smile</div>
+            </div>
+
+            <!-- Frame 2 -->
+            <div class="polaroid" onclick="document.getElementById('img2').click()">
+                <div class="photo-slot" id="slot2">
+                    <span style="font-size: 2rem;">💖</span>
+                    <span style="font-size: 0.8rem; color: #aa4465;">Click to add photo</span>
+                </div>
+                <input type="file" id="img2" class="file-input" accept="image/*" onchange="loadPhoto(event, 'slot2')">
+                <div class="photo-caption">My Favorite Person</div>
+            </div>
+
+            <!-- Frame 3 -->
+            <div class="polaroid" onclick="document.getElementById('img3').click()">
+                <div class="photo-slot" id="slot3">
+                    <span style="font-size: 2rem;">🎂</span>
+                    <span style="font-size: 0.8rem; color: #aa4465;">Click to add photo</span>
+                </div>
+                <input type="file" id="img3" class="file-input" accept="image/*" onchange="loadPhoto(event, 'slot3')">
+                <div class="photo-caption">Birthday Queen</div>
+            </div>
+        </div>
+
+        <!-- Love Messages & Quotes -->
+        <h2 class="section-title">💌 Messages From My Heart</h2>
+
+        <div class="message-grid">
+            <div class="love-card">
+                <h3>To My Dearest Geetha,</h3>
+                <p style="margin-top: 10px;">
+                    Happy Birthday to the girl who fills my life with endless sweetness and smiles. You make every ordinary day feel like a magical celebration!
+                </p>
+            </div>
+
+            <div class="love-card">
+                <h3>Forever & Always</h3>
+                <p style="margin-top: 10px;">
+                    "Like Bubu loves Dudu, my heart is always happiest when I am with you. May your birthday be as soft, bright, and wonderful as your soul."
+                </p>
+            </div>
+
+            <div class="love-card">
+                <h3>My Birthday Wish For You</h3>
+                <p style="margin-top: 10px;">
+                    I wish for your year ahead to be filled with laughter, dreams coming true, delicious cakes, and endless happy moments together!
+                </p>
+            </div>
+        </div>
+
+        <!-- Interactive Celebration Section -->
+        <div class="interactive-section">
+            <h3 style="font-family: 'Fredoka'; color: var(--accent); margin-bottom: 15px;">Ready to Celebrate? 🥳</h3>
+            <button class="btn-celebrate" onclick="celebrate()">Pop Birthday Surprise!</button>
+
+            <div class="surprise-msg" id="surprise">
+                <p style="font-size: 1.8rem; font-family: 'Sacramento';">I Love You so much, Geetha! ❤️</p>
+                <p style="font-size: 1rem; margin-top: 5px;">You are my happiness, today and every single day! 🐼🐻✨</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatic Confetti Explosion on Page Load
+        window.addEventListener('DOMContentLoaded', () => {
+            triggerConfetti();
+            createFloatingHearts();
+        });
+
+        function triggerConfetti() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 4,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff4d6d', '#ff8fa3', '#fff0f3']
+                });
+                confetti({
+                    particleCount: 4,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff4d6d', '#ff8fa3', '#fff0f3']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
+        // Handle Photo Upload into Polaroid Frame
+        function loadPhoto(event, slotId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const slot = document.getElementById(slotId);
+                    slot.innerHTML = `<img src="${e.target.result}" alt="Uploaded Photo">`;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Surprise Button Action
+        function celebrate() {
+            document.getElementById('surprise').style.display = 'block';
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        // Generate Random Floating Hearts Background
+        function createFloatingHearts() {
+            const container = document.getElementById('hearts-container');
+            const hearts = ['💖', '💕', '🌸', '✨', '🎂'];
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-bg';
+                heart.innerText = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(heart);
+            }
+        }
+    </script>
+</body>
+</html>
